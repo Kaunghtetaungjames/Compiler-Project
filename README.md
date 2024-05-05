@@ -9,7 +9,7 @@ Programming Language Project
 
 
 
-ASTparser
+Astparser
 
 Feature List
 
@@ -56,3 +56,46 @@ parser = Parser(lexer)
 # Call the parse() method of the parser
 ast = parser.parse()
 ```
+
+
+Interpreter 
+
+Feature List, Syntax, and How to Run
+
+Feature List:
+The interpreter class has the following features:
+
+1. "Initialization": The `Interpreter` class takes a `parser` object as an argument and initializes an empty `variables` dictionary.
+2. "Interpretation": The `interpret` method calls the `parse` method of the `parser` object and then calls the `visit` method with the parsed tree as an argument.
+3. "Visiting Nodes": The `visit` method dynamically calls the appropriate `visit_<node_type>` method based on the type of the node and returns the result.
+4. "Generic Visit": The `generic_visit` method raises an exception if there is no specific `visit_<node_type>` method defined for a node type.
+5. "Binary Operations": The `visit_BinOp` method performs different operations based on the type of the binary operator.
+6. "Number and Boolean Nodes": The `visit_Num` and `visit_Boolean` methods simply return the value of the respective nodes.
+7. "Assignment": The `visit_Assign` method assigns the value of the right node to the variable specified by the left node.
+8. "If-Else Statements": The `visit_IfElse` method evaluates the condition node and executes either the if block or the else block based on the result.
+9. "While Loops": The `visit_WhileLoop` method repeatedly executes the block node as long as the condition node evaluates to true.
+10. "Print Statements": The `visit_Print` method evaluates the expression node and prints the result.
+
+Syntax:
+The syntax of the provided code follows the Python programming language syntax. It defines a class named `Interpreter` with various methods for interpreting different types of nodes. The code uses indentation to define blocks of code and follows the object-oriented programming paradigm.
+
+How to Run:
+To run the provided code, you need to follow these steps:
+
+1. Import the `TokenTypes` class from the `lexer` module.
+2. Create an instance of the `Interpreter` class, passing a `parser` object as an argument.
+3. Call the `interpret` method on the `Interpreter` instance.
+
+Here is an example of how to run the code:
+
+```python
+from lexer import TokenTypes
+
+class Parser:
+    # Define the parser logic here
+
+parser = Parser()
+interpreter = Interpreter(parser)
+interpreter.interpret()
+```
+
