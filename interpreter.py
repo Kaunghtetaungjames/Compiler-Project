@@ -26,10 +26,18 @@ class Interpreter:
             return self.visit(node.left) * self.visit(node.right)
         elif node.op.type == TokenTypes.DIVIDE:
             return self.visit(node.left) / self.visit(node.right)
-        elif node.op.type == TokenTypes.EQUAL:
+        elif node.op.type == TokenTypes.EQ:
             return self.visit(node.left) == self.visit(node.right)
-        elif node.op.type == TokenTypes.NOTEQUAL:
+        elif node.op.type == TokenTypes.NE:
             return self.visit(node.left) != self.visit(node.right)
+        elif node.op.type == TokenTypes.LT:
+            return self.visit(node.left) < self.visit(node.right)
+        elif node.op.type == TokenTypes.LE:
+            return self.visit(node.left) <= self.visit(node.right)
+        elif node.op.type == TokenTypes.GT:
+            return self.visit(node.left) > self.visit(node.right)
+        elif node.op.type == TokenTypes.GE:
+            return self.visit(node.left) >= self.visit(node.right)
 
     def visit_Num(self, node):
         return node.value
