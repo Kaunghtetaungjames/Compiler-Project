@@ -1,4 +1,26 @@
-import re
+from enum import Enum
+
+class TokenTypes(Enum):
+    # Token types
+    INTEGER = 'INTEGER'
+    FLOAT = 'FLOAT'
+    BOOLEAN = 'BOOLEAN'
+    PLUS = 'PLUS'
+    MINUS = 'MINUS'
+    MULTIPLY = 'MULTIPLY'
+    DIVIDE = 'DIVIDE'
+    EQUAL = 'EQUAL'
+    NOTEQUAL = 'NOTEQUAL'
+    ASSIGN = 'ASSIGN'
+    LPAREN = 'LPAREN'
+    RPAREN = 'RPAREN'
+    IF = 'IF'
+    THEN = 'THEN'
+    ELSE = 'ELSE'
+    WHILE = 'WHILE'
+    PRINT = 'PRINT'
+    ID = 'ID'
+    EOF = 'EOF'
 
 class Token:
     def __init__(self, type, value):
@@ -6,7 +28,7 @@ class Token:
         self.value = value
 
     def __str__(self):
-        return f'Token({self.type}, {self.value})'
+        return f'Token({self.type}, {repr(self.value)})'
 
 class Lexer:
     def __init__(self, text):
@@ -39,17 +61,17 @@ class Lexer:
             while self.current_char is not None and self.current_char.isdigit():
                 result += self.current_char
                 self.advance()
-            return Token(FLOAT, float(result))
+            return Token(TokenTypes.FLOAT, float(result))
         else:
-            return Token(INTEGER, int(result))
+            return Token(TokenTypes.INTEGER, int(result))
 
     def boolean(self):
         if self.text[self.pos:self.pos + 4] == 'True':
             self.pos += 4
-            return Token(BOOLEAN, True)
+            return Token(TokenTypes.BOOLEAN, True)
         elif self.text[self.pos:self.pos + 5] == 'False':
             self.pos += 5
-            return Token(BOOLEAN, False)
+            return Token(TokenTypes.BOOLEAN, False)
         else:
             self.error()
 
@@ -62,62 +84,75 @@ class Lexer:
             if self.current_char.isdigit():
                 return self.integer()
             
-            if self.current_char in '+-*/()=':
-                if self.current_char == '+':
+            if self.current_char == '+':
+                token = Token(TokenTypes.PLUS, self.current_char)
+                self.advance()
+                return token
+            
+            if self.current_char == '-':
+                token = Token(TokenTypes.MINUS, self.current_char)
+                self.advance()
+                return token
+            
+            if self.current_char == '*':
+                token = Token(TokenTypes.MULTIPLY, self.current_char)
+                self.advance()
+                return token
+            
+            if self.current_char == '/':
+                token = Token(TokenTypes.DIVIDE, self.current_char)
+                self.advance()
+                return token
+            
+            if self.current_char == '(':
+                token = Token(TokenTypes.LPAREN, self.current_char)
+                self.advance()
+                return token
+
+            if self.current_char == ')':
+                token = Token(TokenTypes.RPAREN, self.current_char)
+                self.advance()
+                return token
+            
+            if self.current_char == '=':
+                if self.text[self.pos:self.pos + 2] == '==':
+                    self.pos += 2
+                    return Token(TokenTypes.EQUAL, '==')
+                else:
+                    token = Token(TokenTypes.ASSIGN, self.current_char)
                     self.advance()
-                    return Token(PLUS, '+')
-                elif self.current_char == '-':
-                    self.advance()
-                    return Token(MINUS, '-')
-                elif self.current_char == '*':
-                    self.advance()
-                    return Token(MULTIPLY, '*')
-                elif self.current_char == '/':
-                    self.advance()
-                    return Token(DIVIDE, '/')
-                elif self.current_char == '(':
-                    self.advance()
-                    return Token(LPAREN, '(')
-                elif self.current_char == ')':
-                    self.advance()
-                    return Token(RPAREN, ')')
-                elif self.current_char == '=':
-                    self.advance()
-                    if self.current_char == '=':
-                        self.advance()
-                        return Token(EQUAL, '==')
-                    else:
-                        return Token(ASSIGN, '=')
+                    return token
             
             if self.current_char == '!':
                 if self.text[self.pos:self.pos + 2] == '!=':
                     self.pos += 2
-                    return Token(NOTEQUAL, '!=')
+                    return Token(TokenTypes.NOTEQUAL, '!=')
                 else:
                     self.error()
 
             if self.text[self.pos:self.pos + 2] == 'if':
                 self.pos += 2
-                return Token(IF, 'if')
+                return Token(TokenTypes.IF, 'if')
             elif self.text[self.pos:self.pos + 4] == 'else':
                 self.pos += 4
-                return Token(ELSE, 'else')
+                return Token(TokenTypes.ELSE, 'else')
             elif self.text[self.pos:self.pos + 5] == 'while':
                 self.pos += 5
-                return Token(WHILE, 'while')
+                return Token(TokenTypes.WHILE, 'while')
             elif self.text[self.pos:self.pos + 5] == 'print':
                 self.pos += 5
-                return Token(PRINT, 'print')
+                return Token(TokenTypes.PRINT, 'print')
             
             if self.current_char.isalpha():
-                identifier = ''
-                while self.current_char is not None and (self.current_char.isalpha() or self.current_char.isdigit() or self.current_char == '_'):
-                    identifier += self.current_char
-                    self.advance()
-                return Token(ID, identifier)
+                return self.identifier()
 
             self.error()
 
-        return Token(EOF, None)
-
-
+        return Token(TokenTypes.EOF, None)
+    
+    def identifier(self):
+        result = ''
+        while self.current_char is not None and (self.current_char.isalnum() or self.current_char == '_'):
+            result += self.current_char
+            self.advance()
+        return Token(TokenTypes.ID, result)
