@@ -1,13 +1,18 @@
 from lexer import TokenTypes
 
 class Interpreter:
-    def __init__(self, parser):
+    def __init__(self, parser, type_checker):
         self.parser = parser
+        self.type_checker = type_checker
         self.variables = {}
 
     def interpret(self):
         tree = self.parser.parse()
+        self.type_check(tree)
         return self.visit(tree)
+
+    def type_check(self, node):
+        self.type_checker.check(node)
 
     def visit(self, node):
         method_name = f'visit_{type(node).__name__}'
@@ -26,18 +31,10 @@ class Interpreter:
             return self.visit(node.left) * self.visit(node.right)
         elif node.op.type == TokenTypes.DIVIDE:
             return self.visit(node.left) / self.visit(node.right)
-        elif node.op.type == TokenTypes.EQ:
+        elif node.op.type == TokenTypes.EQUAL:
             return self.visit(node.left) == self.visit(node.right)
-        elif node.op.type == TokenTypes.NE:
+        elif node.op.type == TokenTypes.NOTEQUAL:
             return self.visit(node.left) != self.visit(node.right)
-        elif node.op.type == TokenTypes.LT:
-            return self.visit(node.left) < self.visit(node.right)
-        elif node.op.type == TokenTypes.LE:
-            return self.visit(node.left) <= self.visit(node.right)
-        elif node.op.type == TokenTypes.GT:
-            return self.visit(node.left) > self.visit(node.right)
-        elif node.op.type == TokenTypes.GE:
-            return self.visit(node.left) >= self.visit(node.right)
 
     def visit_Num(self, node):
         return node.value
