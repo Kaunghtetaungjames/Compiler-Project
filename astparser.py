@@ -148,9 +148,7 @@ class Parser:
 
     def print_statement(self):
         self.consume(TokenTypes.PRINT)
-        self.consume(TokenTypes.LPAREN)
         expr = self.expr()
-        self.consume(TokenTypes.RPAREN)
         return Print(expr)
 
     def parse(self):
