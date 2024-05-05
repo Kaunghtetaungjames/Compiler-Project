@@ -50,7 +50,7 @@ class Lexer:
         while self.current_char is not None and self.current_char.isspace():
             self.advance()
 
-    def integer(self):
+    def number(self):
         result = ''
         while self.current_char is not None and self.current_char.isdigit():
             result += self.current_char
@@ -64,16 +64,6 @@ class Lexer:
             return Token(TokenTypes.FLOAT, float(result))
         return Token(TokenTypes.INTEGER, int(result))
 
-    def boolean(self):
-        if self.text[self.pos:self.pos + 4] == 'True':
-            self.pos += 4
-            return Token(TokenTypes.BOOLEAN, True)
-        elif self.text[self.pos:self.pos + 5] == 'False':
-            self.pos += 5
-            return Token(TokenTypes.BOOLEAN, False)
-        else:
-            self.error()
-
     def get_next_token(self):
         while self.current_char is not None:
             if self.current_char.isspace():
@@ -81,7 +71,7 @@ class Lexer:
                 continue
 
             if self.current_char.isdigit():
-                return self.integer()
+                return self.number()
             
             if self.current_char == '+':
                 token = Token(TokenTypes.PLUS, self.current_char)
@@ -153,6 +143,15 @@ class Lexer:
                 self.pos += 5
                 self.advance()
                 return Token(TokenTypes.PRINT, 'print')
+            
+            if self.current_char == 'T' and self.text[self.pos:self.pos + 4] == 'True':
+                self.pos += 4
+                self.advance()
+                return Token(TokenTypes.BOOLEAN, 'True')
+            elif self.current_char == 'F' and self.text[self.pos:self.pos + 5] == 'False':
+                self.pos += 5
+                self.advance()
+                return Token(TokenTypes.BOOLEAN, 'False')
 
             if self.current_char.isalpha():
                 return self.identifier()
