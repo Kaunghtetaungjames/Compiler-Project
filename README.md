@@ -25,8 +25,6 @@ Feature List
 
 2. "Parser Class": The code includes a `Parser` class that is responsible for parsing the input and constructing the abstract syntax tree. It uses a lexer to tokenize the input.
 
-3. "Lexer": The lexer is not provided in the code snippet, but it is assumed to be implemented separately. The lexer is responsible for tokenizing the input code.
-
 Syntax
 
 The code snippet follows the syntax of the Python programming language. It defines classes using the `class` keyword and uses indentation to indicate block structure. The code also includes function definitions using the `def` keyword.
@@ -80,7 +78,7 @@ Syntax:
 The syntax of the provided code follows the Python programming language syntax. It defines a class named `Interpreter` with various methods for interpreting different types of nodes. The code uses indentation to define blocks of code and follows the object-oriented programming paradigm.
 
 How to Run:
-To run the provided code, you need to follow these steps:
+To run the provided code,
 
 1. Import the `TokenTypes` class from the `lexer` module.
 2. Create an instance of the `Interpreter` class, passing a `parser` object as an argument.
