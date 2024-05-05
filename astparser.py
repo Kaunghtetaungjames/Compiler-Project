@@ -95,7 +95,7 @@ class Parser:
             node = BinOp(left=node, op=token, right=self.term())
         return node
 
-    def equality_expr(self):
+    def comparison(self):
         node = self.expr()
         if self.current_token.type in (TokenTypes.EQUAL, TokenTypes.NOTEQUAL):
             token = self.current_token
@@ -114,7 +114,7 @@ class Parser:
         elif self.current_token.type == TokenTypes.PRINT:
             node = self.print_statement()
         else:
-            node = self.expr()
+            node = self.comparison()
         return node
 
     def assignment_statement(self):
@@ -131,7 +131,7 @@ class Parser:
 
     def if_statement(self):
         self.consume(TokenTypes.IF)
-        condition = self.expr()
+        condition = self.comparison()
         self.consume(TokenTypes.THEN)
         if_block = self.statement()
         if self.current_token.type == TokenTypes.ELSE:
@@ -142,7 +142,7 @@ class Parser:
 
     def while_statement(self):
         self.consume(TokenTypes.WHILE)
-        condition = self.expr()
+        condition = self.comparison()
         block = self.statement()
         return WhileLoop(condition, block)
 

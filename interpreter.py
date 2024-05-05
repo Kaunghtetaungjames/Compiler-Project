@@ -41,7 +41,7 @@ class Interpreter:
         var_name = node.left.value
         value = self.visit(node.right)
         self.variables[var_name] = value
-        return value
+        return f"{var_name} : {value}"
 
     def visit_IfElse(self, node):
         if self.visit(node.condition):
@@ -57,4 +57,4 @@ class Interpreter:
 
     def visit_Print(self, node):
         result = self.visit(node.expr)
-        print(result)
+        return result

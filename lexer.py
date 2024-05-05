@@ -104,8 +104,9 @@ class Lexer:
                 return token
             
             if self.current_char == '=':
-                if self.text[self.pos:self.pos + 2] == '==':
-                    self.pos += 2
+                self.advance()
+                if self.current_char == '=':
+                    self.advance()
                     return Token(TokenTypes.EQUAL, '==')
                 else:
                     token = Token(TokenTypes.ASSIGN, self.current_char)
@@ -113,8 +114,9 @@ class Lexer:
                     return token
             
             if self.current_char == '!':
-                if self.text[self.pos:self.pos + 2] == '!=':
-                    self.pos += 2
+                self.advance()
+                if self.current_char == '=':
+                    self.advance()
                     return Token(TokenTypes.NOTEQUAL, '!=')
                 else:
                     self.error()
@@ -147,11 +149,11 @@ class Lexer:
             if self.current_char == 'T' and self.text[self.pos:self.pos + 4] == 'True':
                 self.pos += 4
                 self.advance()
-                return Token(TokenTypes.BOOLEAN, 'True')
+                return Token(TokenTypes.BOOLEAN, True)
             elif self.current_char == 'F' and self.text[self.pos:self.pos + 5] == 'False':
                 self.pos += 5
                 self.advance()
-                return Token(TokenTypes.BOOLEAN, 'False')
+                return Token(TokenTypes.BOOLEAN, False)
 
             if self.current_char.isalpha():
                 return self.identifier()
