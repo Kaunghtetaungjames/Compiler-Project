@@ -53,7 +53,8 @@ class Parser:
     def error(self):
         raise Exception('Invalid Syntax')
 
-    def eat(self, token_type):
+    def consume(self, token_type):
+        print(self.current_token)
         if self.current_token.type == token_type:
             self.current_token = self.lexer.get_next_token()
         else:
@@ -62,18 +63,18 @@ class Parser:
     def factor(self):
         token = self.current_token
         if token.type == TokenTypes.INTEGER or token.type == TokenTypes.FLOAT:
-            self.eat(token.type)
+            self.consume(token.type)
             return Num(token)
         elif token.type == TokenTypes.BOOLEAN:
-            self.eat(token.type)
+            self.consume(token.type)
             return Boolean(token)
         elif token.type == TokenTypes.LPAREN:
-            self.eat(TokenTypes.LPAREN)
+            self.consume(TokenTypes.LPAREN)
             node = self.expr()
-            self.eat(TokenTypes.RPAREN)
+            self.consume(TokenTypes.RPAREN)
             return node
         elif token.type == TokenTypes.MINUS:
-            self.eat(TokenTypes.MINUS)
+            self.consume(TokenTypes.MINUS)
             return UnaryOp(token, self.factor())
         else:
             return self.variable()
@@ -82,7 +83,7 @@ class Parser:
         node = self.factor()
         while self.current_token.type in (TokenTypes.MULTIPLY, TokenTypes.DIVIDE):
             token = self.current_token
-            self.eat(token.type)
+            self.consume(token.type)
             node = BinOp(left=node, op=token, right=self.factor())
         return node
 
@@ -90,7 +91,7 @@ class Parser:
         node = self.term()
         while self.current_token.type in (TokenTypes.PLUS, TokenTypes.MINUS):
             token = self.current_token
-            self.eat(token.type)
+            self.consume(token.type)
             node = BinOp(left=node, op=token, right=self.term())
         return node
 
@@ -98,7 +99,7 @@ class Parser:
         node = self.expr()
         if self.current_token.type in (TokenTypes.EQUAL, TokenTypes.NOTEQUAL):
             token = self.current_token
-            self.eat(token.type)
+            self.consume(token.type)
             return BinOp(left=node, op=token, right=self.expr())
         else:
             return node
@@ -119,34 +120,37 @@ class Parser:
     def assignment_statement(self):
         left = self.variable()
         token = self.current_token
-        self.eat(TokenTypes.ASSIGN)
+        self.consume(TokenTypes.ASSIGN)
         right = self.expr()
         return Assign(left, token, right)
 
     def variable(self):
         token = self.current_token
-        self.eat(TokenTypes.ID)
+        self.consume(TokenTypes.ID)
         return token
 
     def if_statement(self):
-        self.eat(TokenTypes.IF)
+        self.consume(TokenTypes.IF)
         condition = self.expr()
+        self.consume(TokenTypes.THEN)
         if_block = self.statement()
         if self.current_token.type == TokenTypes.ELSE:
-            self.eat(TokenTypes.ELSE)
+            self.consume(TokenTypes.ELSE)
             else_block = self.statement()
             return IfElse(condition, if_block, else_block)
         return IfElse(condition, if_block)
 
     def while_statement(self):
-        self.eat(TokenTypes.WHILE)
+        self.consume(TokenTypes.WHILE)
         condition = self.expr()
         block = self.statement()
         return WhileLoop(condition, block)
 
     def print_statement(self):
-        self.eat(TokenTypes.PRINT)
+        self.consume(TokenTypes.PRINT)
+        self.consume(TokenTypes.LPAREN)
         expr = self.expr()
+        self.consume(TokenTypes.RPAREN)
         return Print(expr)
 
     def parse(self):

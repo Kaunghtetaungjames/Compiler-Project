@@ -37,7 +37,7 @@ class Lexer:
         self.current_char = self.text[self.pos]
 
     def error(self):
-        raise Exception('Invalid character')
+        raise Exception('Invalid Character')
 
     def advance(self):
         self.pos += 1
@@ -62,8 +62,7 @@ class Lexer:
                 result += self.current_char
                 self.advance()
             return Token(TokenTypes.FLOAT, float(result))
-        else:
-            return Token(TokenTypes.INTEGER, int(result))
+        return Token(TokenTypes.INTEGER, int(result))
 
     def boolean(self):
         if self.text[self.pos:self.pos + 4] == 'True':
@@ -130,19 +129,26 @@ class Lexer:
                 else:
                     self.error()
 
-            if self.text[self.pos:self.pos + 2] == 'if':
+            if self.current_char == 'i' and self.text[self.pos:self.pos + 2] == 'if':
                 self.pos += 2
                 return Token(TokenTypes.IF, 'if')
-            elif self.text[self.pos:self.pos + 4] == 'else':
+
+            if self.current_char == 't' and self.text[self.pos:self.pos + 4] == 'then':
+                self.pos += 4
+                return Token(TokenTypes.THEN, 'then')
+
+            if self.current_char == 'e' and self.text[self.pos:self.pos + 4] == 'else':
                 self.pos += 4
                 return Token(TokenTypes.ELSE, 'else')
-            elif self.text[self.pos:self.pos + 5] == 'while':
+
+            if self.current_char == 'w' and self.text[self.pos:self.pos + 5] == 'while':
                 self.pos += 5
                 return Token(TokenTypes.WHILE, 'while')
-            elif self.text[self.pos:self.pos + 5] == 'print':
+
+            if self.current_char == 'p' and self.text[self.pos:self.pos + 5] == 'print':
                 self.pos += 5
                 return Token(TokenTypes.PRINT, 'print')
-            
+
             if self.current_char.isalpha():
                 return self.identifier()
 

@@ -5,18 +5,17 @@ class Interpreter:
         self.parser = parser
         self.variables = {}
 
+    def interpret(self):
+        tree = self.parser.parse()
+        return self.visit(tree)
+
     def visit(self, node):
         method_name = f'visit_{type(node).__name__}'
-        print(type(node).__name__)
         visitor = getattr(self, method_name, self.generic_visit)
         return visitor(node)
 
     def generic_visit(self, node):
         raise Exception(f'No visit_{type(node).__name__} method')
-
-    def interpret(self):
-        tree = self.parser.parse()
-        return self.visit(tree)
 
     def visit_BinOp(self, node):
         if node.op.type == TokenTypes.PLUS:
@@ -44,7 +43,7 @@ class Interpreter:
         self.variables[var_name] = value
         return value
 
-    def visit_If(self, node):
+    def visit_IfElse(self, node):
         if self.visit(node.condition):
             return self.visit(node.if_block)
         elif node.else_block:
