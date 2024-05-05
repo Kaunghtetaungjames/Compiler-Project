@@ -58,14 +58,6 @@ while True:
     print(result)
 ```
 
-```python
-lexer = Lexer("3 + 4 * 2")
-token = lexer.get_next_token()
-while token.type != TokenTypes.EOF:
-    print(token)
-    token = lexer.get_next_token()
-```
-
 ```
 >> x = 10
 x : 10
