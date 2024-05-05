@@ -54,7 +54,6 @@ class Parser:
         raise Exception('Invalid Syntax')
 
     def consume(self, token_type):
-        print(self.current_token)
         if self.current_token.type == token_type:
             self.current_token = self.lexer.get_next_token()
         else:
@@ -70,7 +69,7 @@ class Parser:
             return Boolean(token)
         elif token.type == TokenTypes.LPAREN:
             self.consume(TokenTypes.LPAREN)
-            node = self.expr()
+            node = self.comparison()
             self.consume(TokenTypes.RPAREN)
             return node
         elif token.type == TokenTypes.MINUS:
@@ -97,7 +96,7 @@ class Parser:
 
     def comparison(self):
         node = self.expr()
-        if self.current_token.type in (TokenTypes.EQUAL, TokenTypes.NOTEQUAL):
+        if self.current_token.type in (TokenTypes.EQ, TokenTypes.NE, TokenTypes.LT, TokenTypes.LE, TokenTypes.GT, TokenTypes.GE):
             token = self.current_token
             self.consume(token.type)
             return BinOp(left=node, op=token, right=self.expr())
@@ -148,7 +147,7 @@ class Parser:
 
     def print_statement(self):
         self.consume(TokenTypes.PRINT)
-        expr = self.expr()
+        expr = self.comparison()
         return Print(expr)
 
     def parse(self):
