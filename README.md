@@ -97,3 +97,97 @@ interpreter = Interpreter(parser)
 interpreter.interpret()
 ```
 
+Lexer
+
+Feature List
+
+The provided code snippet demonstrates the implementation of a lexer for a simple programming language. 
+
+1. "Enum Class (TokenTypes):" The code defines an enumeration class called `TokenTypes` using the `Enum` module. This class represents the different types of tokens that can be encountered in the programming language. The token types include INTEGER, FLOAT, BOOLEAN, PLUS, MINUS, MULTIPLY, DIVIDE, EQUAL, NOTEQUAL, ASSIGN, LPAREN, RPAREN, IF, THEN, ELSE, WHILE, PRINT, ID, and EOF.
+
+2. Token Class:** The code defines a `Token` class that represents a token in the programming language. Each token has a type (from the `TokenTypes` enumeration) and a value. The `Token` class also provides a `__str__` method to display the token in a readable format.
+
+3. "Lexer Class:" The code defines a `Lexer` class that performs lexical analysis on the input text. The lexer scans the text character by character and generates tokens based on the defined rules. The lexer provides methods for handling integers, floats, booleans, whitespace, operators, parentheses, and keywords. It also includes an `error` method to handle invalid characters.
+
+4. - `advance`: Advances the current position in the text.
+   - `skip_whitespace`: Skips any whitespace characters.
+   - `integer`: Handles the parsing of integer tokens.
+   - `boolean`: Handles the parsing of boolean tokens.
+   - `get_next_token`: Retrieves the next token from the input text.
+   - `identifier`: Handles the parsing of identifier tokens.
+
+Syntax
+
+The code snippet demonstrates the syntax for defining an enumeration class, a token class, and a lexer class in Python. 
+1. "Enum Class Syntax:"
+   ```python
+   from enum import Enum
+
+   class TokenTypes(Enum):
+       # Token types
+       INTEGER = 'INTEGER'
+       FLOAT = 'FLOAT'
+       BOOLEAN = 'BOOLEAN'
+       # ...
+   ```
+
+2. "Token Class Syntax:"
+   ```python
+   class Token:
+       def __init__(self, type, value):
+           self.type = type
+           self.value = value
+
+       def __str__(self):
+           return f'Token({self.type}, {repr(self.value)})'
+   ```
+
+3. "Lexer Class Syntax:"
+   ```python
+   class Lexer:
+       def __init__(self, text):
+           self.text = text
+           self.pos = 0
+           self.current_char = self.text[self.pos]
+
+       def advance(self):
+           # ...
+
+       def skip_whitespace(self):
+           # ...
+
+       def integer(self):
+           # ...
+
+       def boolean(self):
+           # ...
+
+       def get_next_token(self):
+           # ...
+
+       def identifier(self):
+           # ...
+   ```
+
+How to Run
+
+To use the lexer, you need to create an instance of the `Lexer` class and pass the input text as an argument to its constructor. Then, you can call the `get_next_token` method to retrieve the next token from the input text.
+
+```python
+lexer = Lexer("3 + 4 * 2")
+token = lexer.get_next_token()
+while token.type != TokenTypes.EOF:
+    print(token)
+    token = lexer.get_next_token()
+```
+
+This code will output the following tokens:
+
+```
+Token(INTEGER, 3)
+Token(PLUS, '+')
+Token(INTEGER, 4)
+Token(MULTIPLY, '*')
+Token(INTEGER, 2)
+```
+
