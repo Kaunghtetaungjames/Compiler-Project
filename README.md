@@ -1,11 +1,16 @@
 # Compiler-Project
 Programming Language Project
 
-|   Student Name  | Student ID | Contribution |
-| --------------- | ---------- | ------------ |
-| Kaung Htet Aung |   124695   |              |
-|                 |            |              |
-|                 |            |              |
+|   Student Name   | Student ID |       Contribution        |
+| ---------------- | ---------- | ------------------------- |
+| Kaung Htet Aung  |   124695   | Types: int, float,        |
+|                  |            | Assignment statement,     |
+|                  |            | Arithmetic Expressions    |
+| Yu Kay Khaing Oo |   124688   | Type: boolean             |
+|                  |            | Basic Boolean Expressions |
+|                  |            | If-then-else, while-loop  |
+|                  |            | print() function          |
+| May Thukha Naing |   124761   | Type checking             |
 
 
 
