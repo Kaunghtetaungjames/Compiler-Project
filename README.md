@@ -1,43 +1,61 @@
 # Compiler-Project
 Programming Language Project
 
-|   Student Name   | Student ID |       Contribution        |
+|   Student Name   | Student ID |      Contributions        |
 | ---------------- | ---------- | ------------------------- |
 | Kaung Htet Aung  |   124695   | Types: int, float,        |
 |                  |            | Assignment statement,     |
 |                  |            | Arithmetic Expressions    |
 | Yu Kay Khaing Oo |   124688   | Type: boolean,            |
-|                  |            | Relational Expressions,   |
-|                  |            | If-then-else, while-loop  |
+|                  |            | Boolean Expressions,      |
+|                  |            | If-then-else statement    |
 |                  |            | print() statement         |
 | May Thukha Naing |   124761   | Dynamic type checking     |
 
-## (1) Features List
+#### (1) Features List
     - Data Types: int, float, boolean
     - Dynamic type checking
-    - Arithmetic Expressions
-    - Relational Expressions
+    - Arithmetic operators: +, -, *, / with the usual precedence of * and / over the others two.
+    - Relational operators: ==, !=, <, <=, >, >=
     - Assignment statement
-    - If-then-else, while-loop
+    - If-then-else statement
     - print() statement
 
-## (2) Syntax
-
-## (3) How to run
+#### (2) Syntax
+    Boolean: True, False
+    Assignment:
+        x = 10
+    If-then-else statement:
+        if 3 > 4 then print(1) else print(3>4)
+    
+#### (3) How to run
 Here is an example of how to run the code:
 
 ```python
-from lexer import TokenTypes
+# Import necessary classes
+from lexer import Lexer
+from astparser import Parser
+from interpreter import Interpreter
 
-# Import necessary classes from the lexer module
+#Input from user
+while True:
+    try:
+        text = input('>> ')
+    except EOFError:
+        break
+    if not text:
+        continue
 
-# Create an instance of the lexer
+    # Create an instance of lexer, passing the input text as an argument
+    lexer = Lexer(text)
 
-# Create an instance of the parser, passing the lexer as an argument
-parser = Parser(lexer)
+    # Create an instance of AST parser, passing the lexer as an argument
+    parser = Parser(lexer)
 
-# Call the parse() method of the parser
-ast = parser.parse()
+    # CCreate an instance of interpreter, passing the parser as an argument
+    interpreter = Interpreter(parser)
+    result = interpreter.interpret()
+    print(result)
 ```
 
 ```python
@@ -48,19 +66,19 @@ while token.type != TokenTypes.EOF:
     token = lexer.get_next_token()
 ```
 
-This code will output the following tokens:
-
 ```
-Token(INTEGER, 3)
-Token(PLUS, '+')
-Token(INTEGER, 4)
-Token(MULTIPLY, '*')
-Token(INTEGER, 2)
+>> x = 10
+x : 10
+>> print(1+2*3)
+7  
+>> if 3>4 then print(1) else print(3>4)
+False
+>>   
 ```
 
 
-## AST (Abstract Syntax Tree)
-"AST (Abstract Syntax Tree) Classes": The code defines several classes that represent different nodes in the abstract syntax tree. These classes include:
+### AST (Abstract Syntax Tree)
+"AST Classes": The code defines several classes that represent different nodes in the abstract syntax tree. These classes include:
    - `Num`: Represents a numeric value.
    - `Boolean`: Represents a boolean value.
    - `BinOp`: Represents a binary operation.
@@ -70,7 +88,7 @@ Token(INTEGER, 2)
    - `WhileLoop`: Represents a while loop.
    - `Print`: Represents a print statement.
 
-## Interpreter 
+### Interpreter 
 
 The interpreter class has the following features:
 
@@ -84,4 +102,3 @@ The interpreter class has the following features:
 8. "If-Else Statements": The `visit_IfElse` method evaluates the condition node and executes either the if block or the else block based on the result.
 9. "While Loops": The `visit_WhileLoop` method repeatedly executes the block node as long as the condition node evaluates to true.
 10. "Print Statements": The `visit_Print` method evaluates the expression node and prints the result.
-
