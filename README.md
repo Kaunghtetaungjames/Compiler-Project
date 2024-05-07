@@ -8,7 +8,7 @@ Programming Language Project
 |                  |            | Arithmetic Expressions    |
 | Yu Kay Khaing Oo |   124688   | Type: boolean,            |
 |                  |            | Boolean Expressions,      |
-|                  |            | If-then-else statement    |
+|                  |            | If-then-else, While-loop  |
 |                  |            | print() statement         |
 | May Thukha Naing |   124761   | Dynamic type checking     |
 
@@ -19,6 +19,7 @@ Programming Language Project
     Relational operators: ==, !=, <, <=, >, >=
     Assignment statement
     If-then-else statement
+    While statement
     print() statement
 
 ### Grammar
@@ -140,15 +141,15 @@ while True:
     # Create an instance of interpreter, passing the parser as an argument
     interpreter = Interpreter(parser)
     result = interpreter.interpret()
-    print(result)
 ```
 
 ```
->> x = 10
+>> <<x:=10;y:=20>>
 x : 10
->> print(1+2*3)
-7  
->> if 3>4 then print(1) else print(3>4)
-False
+y : 20
+>> <<if x>5 then <<print(x)>>>>
+10 
+>> <<if x>10 then <<print(x)>> else << print(y)>>>>
+20 
 >>   
 ```
