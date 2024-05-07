@@ -30,8 +30,6 @@ Programming Language Project
     
     assignment_statement : variable ASSIGN expr
 
-    
-
     if_statement : IF comparison THEN block_statement
                  | IF comparison THEN block_statement ELSE block_statement
 
@@ -51,6 +49,7 @@ Programming Language Project
     factor : INTEGER | FLOAT | BOOLEAN
            | ( comparison )
            | MINUS factor
+           | variable
     
     variable: ID
     
