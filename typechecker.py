@@ -36,6 +36,7 @@ class TypeChecker:
         if node.op.type in (TokenTypes.PLUS, TokenTypes.MINUS, TokenTypes.MULTIPLY, TokenTypes.DIVIDE):
             if left_type not in (TokenTypes.INTEGER, TokenTypes.FLOAT) or right_type not in (TokenTypes.INTEGER, TokenTypes.FLOAT):
                 raise Exception('Type mismatch: Both operands must be numbers')
+            return left_type
         elif node.op.type in (TokenTypes.EQ, TokenTypes.NE, TokenTypes.LT, TokenTypes.LE, TokenTypes.GT, TokenTypes.GE):
             if left_type != right_type:
                 raise Exception('Type mismatch: Operands must be the same type')
@@ -87,5 +88,3 @@ class TypeChecker:
         var_name = node.value
         var_type = self.variables.get(var_name)
         return var_type
-    
-    
