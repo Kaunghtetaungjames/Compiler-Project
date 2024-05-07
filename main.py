@@ -17,8 +17,6 @@ def main():
 
         try:
             result = interpreter.interpret()
-            print(result)
-
         except Exception as e:
             print("Error:", e)
 

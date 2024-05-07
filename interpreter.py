@@ -60,7 +60,7 @@ class Interpreter:
         var_name = node.left.value
         value = self.visit(node.right)
         self.global_variables[var_name] = value
-        return f"{var_name} : {value}"
+        print(f"{var_name} : {value}")
 
     def visit_IfElse(self, node):
         if self.visit(node.condition):
@@ -76,7 +76,7 @@ class Interpreter:
 
     def visit_Print(self, node):
         result = self.visit(node.expr)
-        return result
+        print(result)
 
     def visit_Variable(self, node):
         var_name = node.value
@@ -85,3 +85,7 @@ class Interpreter:
             raise NameError(repr(var_name))
         else:
             return value
+
+    def visit_Block(self, node):
+        for child in node.children:
+            self.visit(child)

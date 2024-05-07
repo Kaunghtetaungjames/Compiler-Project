@@ -46,6 +46,10 @@ class WhileLoop(AST):
         self.condition = condition
         self.block = block
 
+class Block(AST):
+    def __init__(self):
+        self.children = []
+
 class Print(AST):
     def __init__(self, expr):
         self.expr = expr
@@ -59,58 +63,43 @@ class Parser:
         raise Exception('Invalid Syntax')
 
     def consume(self, token_type):
-        print(self.current_token)
         if self.current_token.type == token_type:
             self.current_token = self.lexer.get_next_token()
         else:
             self.error()
 
-    def factor(self):
-        token = self.current_token
-        if token.type == TokenTypes.INTEGER or token.type == TokenTypes.FLOAT:
-            self.consume(token.type)
-            return Num(token)
-        elif token.type == TokenTypes.BOOLEAN:
-            self.consume(token.type)
-            return Boolean(token)
-        elif token.type == TokenTypes.LPAREN:
-            self.consume(TokenTypes.LPAREN)
-            node = self.comparison()
-            self.consume(TokenTypes.RPAREN)
-            return node
-        elif token.type == TokenTypes.MINUS:
-            self.consume(TokenTypes.MINUS)
-            return UnaryOp(token, self.factor())
-        else:
-            return self.variable()
-
-    def term(self):
-        node = self.factor()
-        while self.current_token.type in (TokenTypes.MULTIPLY, TokenTypes.DIVIDE):
-            token = self.current_token
-            self.consume(token.type)
-            node = BinOp(left=node, op=token, right=self.factor())
+    def parse(self):
+        node = self.block_statement()
+        if self.current_token.type != TokenTypes.EOF:
+            self.error()
         return node
 
-    def expr(self):
-        node = self.term()
-        while self.current_token.type in (TokenTypes.PLUS, TokenTypes.MINUS):
-            token = self.current_token
-            self.consume(token.type)
-            node = BinOp(left=node, op=token, right=self.term())
-        return node
+    def block_statement(self):
+        self.consume(TokenTypes.BLOCK_START)
+        nodes = self.statement_list()
+        self.consume(TokenTypes.BLOCK_END)
 
-    def comparison(self):
-        node = self.expr()
-        if self.current_token.type in (TokenTypes.EQ, TokenTypes.NE, TokenTypes.LT, TokenTypes.LE, TokenTypes.GT, TokenTypes.GE):
-            token = self.current_token
-            self.consume(token.type)
-            return BinOp(left=node, op=token, right=self.expr())
-        else:
-            return node
+        root = Block()
+        for node in nodes:
+            root.children.append(node)
+        return root
 
-    def statement(self):
+    def statement_list(self):
+        node = self.statement()
+        results = [node]
+
+        while self.current_token.type == TokenTypes.SEMI:
+            self.consume(TokenTypes.SEMI)
+            results.append(self.statement())
+            
         if self.current_token.type == TokenTypes.ID:
+            self.error()
+        return results
+    
+    def statement(self):
+        if self.current_token.type == TokenTypes.BLOCK_START:
+            node = self.block_statement()
+        elif self.current_token.type == TokenTypes.ID:
             node = self.assignment_statement()
         elif self.current_token.type == TokenTypes.IF:
             node = self.if_statement()
@@ -130,9 +119,9 @@ class Parser:
         return Assign(left, token, right)
 
     def variable(self):
-        token = self.current_token
+        node = Variable(self.current_token)
         self.consume(TokenTypes.ID)
-        return Variable(token)
+        return node
 
     def if_statement(self):
         self.consume(TokenTypes.IF)
@@ -148,7 +137,7 @@ class Parser:
     def while_statement(self):
         self.consume(TokenTypes.WHILE)
         condition = self.comparison()
-        block = self.statement()
+        block = self.block_statement()
         return WhileLoop(condition, block)
 
     def print_statement(self):
@@ -156,8 +145,46 @@ class Parser:
         expr = self.comparison()
         return Print(expr)
 
-    def parse(self):
-        node = self.statement()
-        if self.current_token.type != TokenTypes.EOF:
-            self.error()
+    def comparison(self):
+        node = self.expr()
+        if self.current_token.type in (TokenTypes.EQ, TokenTypes.NE, TokenTypes.LT, TokenTypes.LE, TokenTypes.GT, TokenTypes.GE):
+            token = self.current_token
+            self.consume(token.type)
+            return BinOp(left=node, op=token, right=self.expr())
+        else:
+            return node
+    
+    def expr(self):
+        node = self.term()
+        while self.current_token.type in (TokenTypes.PLUS, TokenTypes.MINUS):
+            token = self.current_token
+            self.consume(token.type)
+            node = BinOp(left=node, op=token, right=self.term())
         return node
+    
+    def term(self):
+        node = self.factor()
+        while self.current_token.type in (TokenTypes.MULTIPLY, TokenTypes.DIVIDE):
+            token = self.current_token
+            self.consume(token.type)
+            node = BinOp(left=node, op=token, right=self.factor())
+        return node
+    
+    def factor(self):
+        token = self.current_token
+        if token.type == TokenTypes.INTEGER or token.type == TokenTypes.FLOAT:
+            self.consume(token.type)
+            return Num(token)
+        elif token.type == TokenTypes.BOOLEAN:
+            self.consume(token.type)
+            return Boolean(token)
+        elif token.type == TokenTypes.LPAREN:
+            self.consume(TokenTypes.LPAREN)
+            node = self.comparison()
+            self.consume(TokenTypes.RPAREN)
+            return node
+        elif token.type == TokenTypes.MINUS:
+            self.consume(TokenTypes.MINUS)
+            return UnaryOp(token, self.factor())
+        else:
+            return self.variable()
