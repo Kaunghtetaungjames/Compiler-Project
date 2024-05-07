@@ -2,8 +2,7 @@ from lexer import TokenTypes
 from astparser import *
 
 class TypeChecker:
-    def __init__(self):
-        self.variables = {}
+    variables = {}
 
     def check(self, node):
         method_name = f'check_{type(node).__name__}'
@@ -14,19 +13,33 @@ class TypeChecker:
         raise Exception(f'No check_{type(node).__name__} method')
 
     def check_Num(self, node):
-        return TokenTypes.INTEGER if isinstance(node.value, int) else TokenTypes.FLOAT
-
+        if isinstance(node.value, int):
+            return TokenTypes.INTEGER
+        elif isinstance(node.value, float):
+            return TokenTypes.FLOAT
+        else:
+            raise Exception(f'Wrong type: {type(node.value).__name__} is not a number')
+    
+    def check_Boolean(self, node):
+        if not isinstance(node.value, bool):
+            raise Exception(f'Wrong type: {type(node.value).__name__} is not a boolean')
+        return TokenTypes.BOOLEAN
+    
+    def check_Block(self, node):
+        for child in node.children:
+            self.check(child)
+    
     def check_BinOp(self, node):
         left_type = self.check(node.left)
         right_type = self.check(node.right)
-        if left_type != right_type:
-            raise Exception('Operands must be of the same type')
+        
         if node.op.type in (TokenTypes.PLUS, TokenTypes.MINUS, TokenTypes.MULTIPLY, TokenTypes.DIVIDE):
-            if left_type != TokenTypes.INTEGER and left_type != TokenTypes.FLOAT:
-                raise Exception('Operands must be numbers')
-            return left_type
+            if left_type not in (TokenTypes.INTEGER, TokenTypes.FLOAT) or right_type not in (TokenTypes.INTEGER, TokenTypes.FLOAT):
+                raise Exception('Type mismatch: Both operands must be numbers')
         elif node.op.type in (TokenTypes.EQ, TokenTypes.NE, TokenTypes.LT, TokenTypes.LE, TokenTypes.GT, TokenTypes.GE):
-            if left_type != TokenTypes.INTEGER and left_type != TokenTypes.FLOAT and left_type != TokenTypes.BOOLEAN:
+            if left_type != right_type:
+                raise Exception('Type mismatch: Operands must be the same type')
+            if left_type not in (TokenTypes.INTEGER, TokenTypes.FLOAT, TokenTypes.BOOLEAN) or right_type not in (TokenTypes.INTEGER, TokenTypes.FLOAT, TokenTypes.BOOLEAN):
                 raise Exception('Operands must be numbers or booleans')
             return TokenTypes.BOOLEAN
 
@@ -69,4 +82,10 @@ class TypeChecker:
             return TokenTypes.BOOLEAN
         else:
             raise Exception(f'Unsupported literal type: {type(node.value).__name__}')
-
+    
+    def check_Variable(self, node):
+        var_name = node.value
+        var_type = self.variables.get(var_name)
+        return var_type
+    
+    
