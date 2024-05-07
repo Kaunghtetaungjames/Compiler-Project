@@ -12,16 +12,16 @@ Programming Language Project
 |                  |            | print() statement         |
 | May Thukha Naing |   124761   | Dynamic type checking     |
 
-#### (1) Features List
-    - Data Types: int, float, boolean
-    - Dynamic type checking
-    - Arithmetic operators: +, -, *, / with the usual precedence of * and / over the others two.
-    - Relational operators: ==, !=, <, <=, >, >=
-    - Assignment statement
-    - If-then-else statement
-    - print() statement
+#### Features List
+    Data Types: int, float, boolean
+    Dynamic type checking
+    Arithmetic operators: +, -, *, / with the usual precedence of * and / over the others two.
+    Relational operators: ==, !=, <, <=, >, >=
+    Assignment statement
+    If-then-else statement
+    print() statement
 
-#### (2) Syntax
+#### Grammar
     statement : assignment_statement
               | if_statement
               | while_statement
@@ -53,7 +53,34 @@ Programming Language Project
     
     variable: ID
     
-#### (3) How to run
+#### Tokens
+    ID          : letter (letter | digit)*
+    INTEGER     : digit+
+    FLOAT       : digit+(.digit+)
+    BOOLEAN     : True | False
+    PLUS        : +
+    MINUS       : -
+    MULTIPLY    : *
+    DIVIDE      : /
+    EQ          : ==
+    NE          : !!
+    LT          : <
+    LE          : <=
+    GT          : >
+    GE          : >=
+    ASSIGN      : :=
+    LPAREN      : '('
+    RPAREN      : ')'
+    IF          : 'if'
+    THEN        : 'then'
+    ELSE        : 'else'
+    WHILE       : 'while'
+    PRINT       : 'print'
+    SEMI        : ';'
+    BLOCK_START : "<<"
+    BLOCK_END   : ">>"
+
+#### How to run
 Here is an example of how to run the code:
 
 ```python
