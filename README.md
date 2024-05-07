@@ -22,11 +22,37 @@ Programming Language Project
     - print() statement
 
 #### (2) Syntax
-    Boolean: True, False
-    Assignment:
-        x = 10
-    If-then-else statement:
-        if 3 > 4 then print(1) else print(3>4)
+    statement : assignment_statement
+              | if_statement
+              | while_statement
+              | print_statement
+              | comparison
+    
+    assignment_statement : variable ASSIGN expr
+
+    
+
+    if_statement : IF comparison THEN block_statement
+                 | IF comparison THEN block_statement ELSE block_statement
+
+    while_statement : WHILE comparison block_statement
+
+    print_statement : PRINT comparison
+
+    comparison : expr (EQ|NE|LT|LE|GT|GE) expr
+               | expr
+
+    expr : term (PLUS | MINUS) term
+         | term
+    
+    term : factor (MULTIPLY | DIVIDE) factor
+         | factor
+    
+    factor : INTEGER | FLOAT | BOOLEAN
+           | ( comparison )
+           | MINUS factor
+    
+    variable: ID
     
 #### (3) How to run
 Here is an example of how to run the code:
@@ -52,7 +78,7 @@ while True:
     # Create an instance of AST parser, passing the lexer as an argument
     parser = Parser(lexer)
 
-    # CCreate an instance of interpreter, passing the parser as an argument
+    # Create an instance of interpreter, passing the parser as an argument
     interpreter = Interpreter(parser)
     result = interpreter.interpret()
     print(result)
@@ -75,6 +101,7 @@ False
    - `Boolean`: Represents a boolean value.
    - `BinOp`: Represents a binary operation.
    - `UnaryOp`: Represents a unary operation.
+   - `Variable`: Represents a variable's name.
    - `Assign`: Represents an assignment statement.
    - `IfElse`: Represents an if-else statement.
    - `WhileLoop`: Represents a while loop.
