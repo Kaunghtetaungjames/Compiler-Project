@@ -23,8 +23,11 @@ class TokenTypes(Enum):
     ELSE = 'ELSE'
     WHILE = 'WHILE'
     PRINT = 'PRINT'
-    ID = 'ID'
-    EOF = 'EOF'
+    ID = 'Identifier'
+    EOF = 'End of File'
+    EOL = 'End of Line'
+    BLOCK_START = "BLOCK_START"
+    BLOCK_END = "BLOCK_END"
 
 class Token:
     def __init__(self, type, value):
@@ -107,19 +110,32 @@ class Lexer:
                 self.advance(1)
                 return token
             
+            if self.current_char == ';':
+                token = Token(TokenTypes.EOL, self.current_char)
+                self.advance(1)
+                return token
+            
+            if self.current_char == ':':
+                self.advance(1)
+                if self.current_char == '=':
+                    self.advance(1)
+                    return Token(TokenTypes.ASSIGN, ':=')
+                else:
+                    self.error()
+            
             if self.current_char == '=':
                 self.advance(1)
                 if self.current_char == '=':
                     self.advance(1)
                     return Token(TokenTypes.EQ, '==')
                 else:
-                    return Token(TokenTypes.ASSIGN, '=')
+                    self.error()
             
             if self.current_char == '!':
                 self.advance(1)
-                if self.current_char == '=':
+                if self.current_char == '!':
                     self.advance(1)
-                    return Token(TokenTypes.NE, '!=')
+                    return Token(TokenTypes.NE, '!!')
                 else:
                     self.error()
 
@@ -128,17 +144,20 @@ class Lexer:
                 if self.current_char == '=':
                     self.advance(1)
                     return Token(TokenTypes.LE, '<=')
-                else:
-                    return Token(TokenTypes.LT, '<')
+                elif self.current_char == '<':
+                    self.advance(1)
+                    return Token(TokenTypes.BLOCK_START, '<<')
+                return Token(TokenTypes.LT, '<')
             
             if self.current_char == '>':
                 self.advance(1)
                 if self.current_char == '=':
                     self.advance(1)
                     return Token(TokenTypes.GE, '>=')
-                else:
-                    return Token(TokenTypes.GT, '>')
-
+                elif self.current_char == '>':
+                    self.advance(1)
+                    return Token(TokenTypes.BLOCK_END, '>>')
+                return Token(TokenTypes.GT, '>')
 
             if self.current_char == 'i' and self.text[self.pos:self.pos + 2] == 'if':
                 self.advance(2)

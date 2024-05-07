@@ -82,7 +82,7 @@ Programming Language Project
     ELSE        : 'else'
     WHILE       : 'while'
     PRINT       : 'print'
-    EOL         : '|'
+    EOL         : ';'
     BLOCK_START : "<<"
     BLOCK_END   : ">>"
 
