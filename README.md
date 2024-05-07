@@ -22,6 +22,11 @@ Programming Language Project
     print() statement
 
 ### Grammar
+    block_statement : BLOCK_START statement_list BLOCK_END
+
+    statement_list  : statement SEMI statement_list
+                    | statement
+    
     statement : block_statement
               | assignment_statement
               | if_statement
@@ -29,19 +34,14 @@ Programming Language Project
               | print_statement
               | comparison
     
-    assignment_statement : variable ASSIGN expr EOL
+    assignment_statement : variable ASSIGN expr
 
     if_statement : IF comparison THEN block_statement
                  | IF comparison THEN block_statement ELSE block_statement
 
     while_statement : WHILE comparison block_statement
 
-    block_statement : BLOCK_START statement_list BLOCK_END
-
-    statement_list : statement EOL statement_list
-                   | statement EOL
-
-    print_statement : PRINT comparison EOL
+    print_statement : PRINT comparison
 
     comparison : expr (EQ|NE|LT|LE|GT|GE) expr
                | expr
@@ -82,7 +82,7 @@ Programming Language Project
     ELSE        : 'else'
     WHILE       : 'while'
     PRINT       : 'print'
-    EOL         : ';'
+    SEMI         : ';'
     BLOCK_START : "<<"
     BLOCK_END   : ">>"
 

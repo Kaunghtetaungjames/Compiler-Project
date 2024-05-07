@@ -25,7 +25,7 @@ class TokenTypes(Enum):
     PRINT = 'PRINT'
     ID = 'Identifier'
     EOF = 'End of File'
-    EOL = 'End of Line'
+    SEMI = 'Semicolon'
     BLOCK_START = "BLOCK_START"
     BLOCK_END = "BLOCK_END"
 
@@ -111,7 +111,7 @@ class Lexer:
                 return token
             
             if self.current_char == ';':
-                token = Token(TokenTypes.EOL, self.current_char)
+                token = Token(TokenTypes.SEMI, self.current_char)
                 self.advance(1)
                 return token
             
