@@ -47,7 +47,7 @@ Programming Language Project
          | factor
     
     factor : INTEGER | FLOAT | BOOLEAN
-           | ( comparison )
+           | LPAREN  comparison LPAREN
            | MINUS factor
            | variable
     
