@@ -83,7 +83,7 @@ Programming Language Project
     ELSE        : 'else'
     WHILE       : 'while'
     PRINT       : 'print'
-    SEMI         : ';'
+    SEMI        : ';'
     BLOCK_START : "<<"
     BLOCK_END   : ">>"
 
