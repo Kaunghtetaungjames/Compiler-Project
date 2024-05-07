@@ -1,7 +1,6 @@
 from lexer import Lexer
 from astparser import Parser
 from interpreter import Interpreter
-from typechecker import TypeChecker
 
 def main():
     while True:
@@ -14,13 +13,12 @@ def main():
 
         lexer = Lexer(text)
         parser = Parser(lexer)
-        type_checker = TypeChecker()
-        interpreter = Interpreter(parser, type_checker)
+        interpreter = Interpreter(parser)
 
         try:
             result = interpreter.interpret()
-            print("Interpreter result:", result)
-            print ("Type checking passed successfully.")
+            print(result)
+
         except Exception as e:
             print("Error:", e)
 

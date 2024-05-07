@@ -1,10 +1,13 @@
 from lexer import TokenTypes
+from typechecker import TypeChecker
 
 class Interpreter:
-    def __init__(self, parser, type_checker):
+
+    global_variables = {}
+
+    def __init__(self, parser):
         self.parser = parser
-        self.type_checker = type_checker
-        self.variables = {}
+        self.type_checker = TypeChecker()
 
     def interpret(self):
         tree = self.parser.parse()
@@ -43,6 +46,9 @@ class Interpreter:
             return self.visit(node.left) > self.visit(node.right)
         elif node.op.type == TokenTypes.GE:
             return self.visit(node.left) >= self.visit(node.right)
+        
+    def visit_UnaryOp(self, node):
+        return -self.visit(node.expr)
 
     def visit_Num(self, node):
         return node.value
@@ -53,7 +59,7 @@ class Interpreter:
     def visit_Assign(self, node):
         var_name = node.left.value
         value = self.visit(node.right)
-        self.variables[var_name] = value
+        self.global_variables[var_name] = value
         return f"{var_name} : {value}"
 
     def visit_IfElse(self, node):
@@ -71,3 +77,11 @@ class Interpreter:
     def visit_Print(self, node):
         result = self.visit(node.expr)
         return result
+
+    def visit_Variable(self, node):
+        var_name = node.value
+        value = self.global_variables.get(var_name)
+        if value is None:
+            raise NameError(repr(var_name))
+        else:
+            return value

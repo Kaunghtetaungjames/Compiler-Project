@@ -24,6 +24,11 @@ class UnaryOp(AST):
         self.token = self.op = op
         self.expr = expr
 
+class Variable:
+    def __init__(self, token):
+        self.token = token
+        self.value = token.value
+
 class Assign(AST):
     def __init__(self, left, op, right):
         self.left = left
@@ -54,6 +59,7 @@ class Parser:
         raise Exception('Invalid Syntax')
 
     def consume(self, token_type):
+        print(self.current_token)
         if self.current_token.type == token_type:
             self.current_token = self.lexer.get_next_token()
         else:
@@ -126,7 +132,7 @@ class Parser:
     def variable(self):
         token = self.current_token
         self.consume(TokenTypes.ID)
-        return token
+        return Variable(token)
 
     def if_statement(self):
         self.consume(TokenTypes.IF)
@@ -151,4 +157,7 @@ class Parser:
         return Print(expr)
 
     def parse(self):
-        return self.statement()
+        node = self.statement()
+        if self.current_token.type != TokenTypes.EOF:
+            self.error()
+        return node
