@@ -31,14 +31,14 @@ Programming Language Project
     statement : block_statement
               | assignment_statement
               | if_statement
-              | while_statement 
+              | while_statement
               | print_statement
               | comparison
     
     assignment_statement : variable ASSIGN expr
 
-    if_statement : IF comparison THEN block_statement
-                 | IF comparison THEN block_statement ELSE block_statement
+    if_statement : IF comparison THEN statement
+                 | IF comparison THEN statement ELSE statement
 
     while_statement : WHILE comparison block_statement
 
@@ -149,7 +149,7 @@ x : 10
 y : 20
 >> <<if x>5 then <<print(x)>>>>
 10 
->> <<if x>10 then <<print(x)>> else << print(y)>>>>
+>> <<if x>10 then <<print(x)>> else <<print(y)>>>>
 20 
 >>   
 ```
